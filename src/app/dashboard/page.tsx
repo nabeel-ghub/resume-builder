@@ -26,7 +26,7 @@ export default async function Dashboard() {
 
     return(
         <HydrateClient>
-        <main className="bg-gray-900 h-[100vh] w-[100vw] flex flex-col">
+        <main className="bg-gray-900 h-auto min-h-screen w-[100vw] flex flex-col">
             <MenuSection user={user}></MenuSection>
             <ResumeSection></ResumeSection>
         </main>

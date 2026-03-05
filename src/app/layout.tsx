@@ -22,8 +22,9 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={cn(geist.variable, dmSans.variable)}>
-      <body>
+    <html lang="en" className={`${cn(geist.variable, dmSans.variable)} min-h-dvh`}>
+      <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"></meta>
+      <body className="min-h-dvh bg-gray-900">
         <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
     </html>

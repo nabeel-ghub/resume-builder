@@ -15,7 +15,7 @@ export function MenuSection({ user }: { user: User }) {
   };
 
   return (
-    <div className="flex h-[15%] w-[100%] items-center justify-between pr-[20px] pl-[20px]">
+    <div className="flex min-h-[20vh] w-[100%] items-center justify-between pr-[20px] pl-[20px]">
       <h2 className="pt-1 text-[25px] font-[500] text-white font-[700]">
         {user?.user_metadata.full_name.split(" ")[0]}'s <span className="text-blue-500">Dashboard</span>
       </h2>

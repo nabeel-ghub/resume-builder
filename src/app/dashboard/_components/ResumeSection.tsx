@@ -30,7 +30,7 @@ export function ResumeSection() {
   }
 
   return (
-    <div className="flex h-[85%] w-[80%] flex-col self-center">
+    <div className="flex h-[85%] w-[80%] flex-col self-center mb-20">
       <>
         <Button
           onClick={() => setIsContainerVisible(true)}

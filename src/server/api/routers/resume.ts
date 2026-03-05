@@ -52,12 +52,24 @@ export const resumeRouter = createTRPCRouter({
   }),
 
   delete: protectedProcedure
-    .input(z.object({ id: z.number() }))
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.db
-        .delete(resumes)
-        .where(and(eq(resumes.id, input.id), eq(resumes.userId, ctx.user.id)));
-    }),
+  .input(z.object({ id: z.number() }))
+  .mutation(async ({ ctx, input }) => {
+    const deleted = await ctx.db
+      .delete(resumes)
+      .where(
+        and(
+          eq(resumes.id, input.id),
+          eq(resumes.userId, ctx.user.id)
+        )
+      )
+      .returning();
+
+    if (deleted.length === 0) {
+      throw new Error("Resume not found or Unauthorized access");
+    }
+
+    return { success: true, deletedId: input.id };
+  }),
 
   update: protectedProcedure
     .input(
@@ -91,7 +103,7 @@ export const resumeRouter = createTRPCRouter({
       if (!updatedResume) {
         throw new Error("Resume not found or unauthorized");
       }
-
+      
       return updatedResume;
     }),
 

@@ -6,6 +6,8 @@ import { format } from "date-fns";
 import { FaEye } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
 import { AiFillDelete } from "react-icons/ai";
+import { api } from "~/trpc/react";
+
 
 interface ResumeListProps {
   resumeData: Resume[] | undefined;
@@ -13,12 +15,30 @@ interface ResumeListProps {
 }
 
 export function ResumeList({ resumeData, onEdit }: ResumeListProps) {
+    const utils = api.useUtils();
+
+    const deleteMutation = api.resume.delete.useMutation({
+  onSuccess: () => {
+    void utils.resume.getAll.invalidate();
+    alert("Resume permanently removed.");
+  },
+  onError: (err) => {
+    alert(err.message);
+  }
+});
+
+const handleDelete = (id: number) => {
+  if (window.confirm("Are you sure? This action cannot be undone.")) {
+    deleteMutation.mutate({ id });
+  }
+};
+
   return (
     <>
       {resumeData?.map((resume) => (
         <Card
           key={resume.id}
-          className="mt-5 border-gray-700 bg-gray-800 text-white"
+          className="mt-5 h-auto border-gray-700 bg-gray-800 text-white"
         >
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="flex flex-col">
@@ -44,7 +64,7 @@ export function ResumeList({ resumeData, onEdit }: ResumeListProps) {
               <Button onClick={() => onEdit(resume)} className="h-[40px] w-[60px] cursor-pointer bg-blue-600 hover:bg-blue-700">
                 <FiEdit2></FiEdit2>
               </Button>
-              <Button variant={"destructive"} className="h-[40px] w-[60px] ml-2 border-[0] hover:border-[1.5px] hover:border-red-600 hover:border-dotted transition-all duration-[0.3s] ease cursor-pointer">
+              <Button onClick={() => handleDelete(resume.id)} variant={"destructive"} className="h-[40px] w-[60px] ml-2 border-[0] hover:border-[1.5px] hover:border-red-600 hover:border-dotted transition-all duration-[0.3s] ease cursor-pointer">
                 <AiFillDelete></AiFillDelete>
               </Button>
             </div>
