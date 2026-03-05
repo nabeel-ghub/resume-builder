@@ -22,9 +22,7 @@ type section = {
 interface ProjectSectionProps {
   section: string;
   sectionArray: section[] | null;
-  sectionArraySetterFunction: React.Dispatch<
-    React.SetStateAction<section[] | null>
-  >;
+  sectionArraySetterFunction: React.Dispatch<React.SetStateAction<section[]>>;
   isAddingSection: boolean;
   setIsAddingSection: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -68,7 +66,7 @@ export function Section({
         !descriptionRef.current ||
         !bullet1Ref.current ||
         !bullet2Ref.current ||
-        !bullet3Ref.current || 
+        !bullet3Ref.current ||
         titleRef.current.value.trim().length <= 0 ||
         roleRef.current.value.trim().length <= 0 ||
         descriptionRef.current.value.trim().length <= 0
@@ -141,12 +139,16 @@ export function Section({
     });
   }
 
-  function handleChangeInputs(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, reference: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>, id?: string) {
+  function handleChangeInputs(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    reference: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>,
+    id?: string,
+  ) {
     if (!reference.current) return;
     sectionArraySetterFunction((prev) => {
       if (!prev) return [];
       return prev.map((item) => {
-        if(!reference.current) return item;
+        if (!reference.current) return item;
         if (item.id === id) {
           return {
             ...item,
@@ -155,16 +157,15 @@ export function Section({
         } else {
           return item;
         }
-    })
-  })
-}
-
-
+      });
+    });
+  }
 
   return (
     <>
       <Label className="mb-2 text-white">
-        {`${section.charAt(0).toUpperCase()}${section.slice(1).toLowerCase()}`} (Upto 3):
+        {`${section.charAt(0).toUpperCase()}${section.slice(1).toLowerCase()}`}{" "}
+        (Upto 3):
       </Label>
       <div>
         {isAddingSection ? (
@@ -245,30 +246,38 @@ export function Section({
                     <Input
                       className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
                       defaultValue={currSection.title}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeInputs(e, titleRef, currSection.id)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        handleChangeInputs(e, titleRef, currSection.id)
+                      }
                       ref={titleRef}
                       name="title"
                     ></Input>
                     <Input
                       className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
                       defaultValue={currSection.role}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeInputs(e, roleRef, currSection.id)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        handleChangeInputs(e, roleRef, currSection.id)
+                      }
                       ref={roleRef}
                       name="role"
                     ></Input>
-                    {currSection.link && 
-                    <Input
-                      className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
-                      defaultValue={currSection.link}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeInputs(e, linkRef)}
-                      ref={linkRef}
-                      name="link"
-                    ></Input>
-                    }
+                    {currSection.link && (
+                      <Input
+                        className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
+                        defaultValue={currSection.link}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          handleChangeInputs(e, linkRef)
+                        }
+                        ref={linkRef}
+                        name="link"
+                      ></Input>
+                    )}
                     <Textarea
                       className="mb-5 min-h-[90px] w-[100%] resize-none rounded-md text-white caret-white"
                       defaultValue={currSection.description}
-                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleChangeInputs(e, descriptionRef)}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                        handleChangeInputs(e, descriptionRef)
+                      }
                       ref={descriptionRef}
                       name="description"
                     ></Textarea>
@@ -276,7 +285,9 @@ export function Section({
                       <Input
                         className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
                         defaultValue={currSection.bullet1}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeInputs(e, bullet1Ref)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          handleChangeInputs(e, bullet1Ref)
+                        }
                         ref={bullet1Ref}
                         name="bullet1"
                       ></Input>
@@ -285,7 +296,9 @@ export function Section({
                       <Input
                         className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
                         defaultValue={currSection.bullet2}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeInputs(e, bullet2Ref)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          handleChangeInputs(e, bullet2Ref)
+                        }
                         ref={bullet2Ref}
                         name="bullet2"
                       ></Input>
@@ -294,7 +307,9 @@ export function Section({
                       <Input
                         className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
                         defaultValue={currSection.bullet3}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeInputs(e, bullet3Ref)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          handleChangeInputs(e, bullet3Ref)
+                        }
                         ref={bullet3Ref}
                         name="bullet3"
                       ></Input>

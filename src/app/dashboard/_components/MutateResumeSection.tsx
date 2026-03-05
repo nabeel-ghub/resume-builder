@@ -14,10 +14,12 @@ import { MdCloseFullscreen } from "react-icons/md";
 import { useRef, useState, type FormEvent } from "react";
 import { SkillSection } from "./SkillSection";
 import { Section } from "./Section";
+import { type RouterOutputs } from "~/trpc/react";
+type Resume = RouterOutputs["resume"]["getAll"][number];
 
 interface Props {
   setIsContainerVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  setMadeChangeToResume: React.Dispatch<React.SetStateAction<boolean>>;
+  initialData?: Resume;
 }
 
 type skill = {
@@ -36,7 +38,31 @@ type section = {
   bullet3: string | null;
 };
 
-export function MutateResumeSection({ setIsContainerVisible, setMadeChangeToResume }: Props) {
+export function MutateResumeSection({ setIsContainerVisible, initialData }: Props) {
+  const isEditMode = !!initialData;
+
+  const utils = api.useUtils(); // For cache invalidation
+  const createResume = api.resume.create.useMutation({
+    onSuccess: () => {
+      setIsContainerVisible(false);
+    },
+  });
+
+  const updateResume = api.resume.update.useMutation({
+    onSuccess: () => {
+      void utils.resume.getAll.invalidate(); // Refresh the list
+      void utils.resume.getById.invalidate({ id: initialData?.id }); // Refresh specific view
+      setIsContainerVisible(false);
+    },
+  });
+
+  //Initialize State with initialData if it exists
+  const [skills, setSkills] = useState<skill[]>(initialData?.skills ?? []);
+  const [projects, setProjects] = useState<section[]>(initialData?.projects ?? []);
+  const [experience, setExperience] = useState<section[]>(initialData?.experiences ?? []);
+  const [education, setEducation] = useState<section[]>(initialData?.educations ?? []);
+
+  // Refs for uncontrolled inputs (pre-filled via defaultValue)
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
@@ -44,55 +70,39 @@ export function MutateResumeSection({ setIsContainerVisible, setMadeChangeToResu
   const summaryRef = useRef<HTMLTextAreaElement>(null);
   const linkedinRef = useRef<HTMLInputElement>(null);
   const githubRef = useRef<HTMLInputElement>(null);
-  const [skills, setSkills] = useState<skill[] | null>([]);
   const skillRef = useRef<HTMLInputElement>(null);
-  const [projects, setProjects] = useState<section[] | null>([]);
-  const [isAddingProject, setIsAddingProject] = useState<boolean>(false);
-  const [experience, setExperience] = useState<section[] | null>([]);
-  const [isAddingExperience, setIsAddingExperience] = useState<boolean>(false);
-  const [education, setEducation] = useState<section[] | null>([]);
-  const [isAddingEducation, setIsAddingEducation] = useState<boolean>(false);
 
-  const createResume = api.resume.create.useMutation({
-    onSuccess: () => {
-      setMadeChangeToResume((prev) => !prev);
-      setIsContainerVisible(false);
-    },
-  });
+  const [isAddingProject, setIsAddingProject] = useState(false);
+  const [isAddingExperience, setIsAddingExperience] = useState(false);
+  const [isAddingEducation, setIsAddingEducation] = useState(false);
 
-  function handleCreateResume(e: React.FormEvent) {
+  function handleSaveResume(e: React.FormEvent) {
     e.preventDefault();
-    if (
-      !nameRef.current ||
-      !phoneRef.current ||
-      !emailRef.current ||
-      !addressRef.current ||
-      !summaryRef.current ||
-      !linkedinRef.current ||
-      !githubRef.current
-    ) {
-      return;
-    }
-
-    const data = {
-      name: nameRef.current.value,
-      phone: phoneRef.current.value,
-      email: emailRef.current.value,
-      address: addressRef.current.value,
-      summary: summaryRef.current.value,
-      skills: skills ?? [],
-      linkedin: linkedinRef.current.value,
-      github: githubRef.current.value,
-      projects: projects ?? [],
-      experiences: experience ?? [],
-      educations: education ?? [],
+    
+    const payload = {
+      name: nameRef.current?.value ?? "",
+      phone: phoneRef.current?.value ?? "",
+      email: emailRef.current?.value ?? "",
+      address: addressRef.current?.value ?? "",
+      summary: summaryRef.current?.value ?? "",
+      skills: skills,
+      linkedin: linkedinRef.current?.value ?? "",
+      github: githubRef.current?.value ?? "",
+      projects: projects,
+      experiences: experience,
+      educations: education,
     };
-    createResume.mutate(data);
+
+    if (isEditMode) {
+      updateResume.mutate({ id: initialData.id, ...payload });
+    } else {
+      createResume.mutate(payload);
+    }
   }
 
   return (
     <form
-      onSubmit={handleCreateResume}
+      onSubmit={handleSaveResume}
       className="ease absolute top-[0] left-[0] flex h-[100vh] w-[100vw] items-center justify-center bg-[rgba(0,0,0,0.7)] backdrop-blur-xs transition-all transition-discrete duration-[1s]"
     >
       <Card className="h-[80%] w-[80%] self-center overflow-y-scroll border-[1px] border-gray-600 bg-linear-to-b from-gray-900 to-black shadow-2xl md:p-10">
@@ -110,16 +120,19 @@ export function MutateResumeSection({ setIsContainerVisible, setMadeChangeToResu
           </div>
         </CardHeader>
 
+        {/* Content Section */}
         <CardContent>
           <Label className="mb-2 text-white">Your name:</Label>
           <Input
             ref={nameRef}
+            defaultValue={initialData?.name}
             className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
             placeholder="Enter your name"
           ></Input>
           <Label className="mb-2 text-white">Your Phone:</Label>
           <Input
             ref={phoneRef}
+            defaultValue={initialData?.phone ?? ""}
             className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
             placeholder="Enter your phone"
             type="number"
@@ -127,6 +140,7 @@ export function MutateResumeSection({ setIsContainerVisible, setMadeChangeToResu
           <Label className="mb-2 text-white">Your Email:</Label>
           <Input
             ref={emailRef}
+            defaultValue={initialData?.email ?? ""}
             className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
             placeholder="Enter your email"
             type="email"
@@ -134,6 +148,7 @@ export function MutateResumeSection({ setIsContainerVisible, setMadeChangeToResu
           <Label className="mb-2 text-white">Your address:</Label>
           <Input
             ref={addressRef}
+            defaultValue={initialData?.address ?? ""}
             className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
             placeholder="Enter your address"
             type="address"
@@ -141,6 +156,7 @@ export function MutateResumeSection({ setIsContainerVisible, setMadeChangeToResu
           <Label className="mb-2 text-white">Professional Summary:</Label>
           <Textarea
             ref={summaryRef}
+            defaultValue={initialData?.summary ?? ""}
             className="mb-5 min-h-[90px] w-[100%] resize-none rounded-md text-white caret-white"
             placeholder="Enter your professional summary"
           ></Textarea>
@@ -154,11 +170,13 @@ export function MutateResumeSection({ setIsContainerVisible, setMadeChangeToResu
           <Label className="mb-2 text-white">Links:</Label>
           <Input
             ref={linkedinRef}
+            defaultValue={initialData?.linkedin ?? ""}
             className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
             placeholder="Enter your LinkedIn Address"
           ></Input>
           <Input
             ref={githubRef}
+            defaultValue={initialData?.github ?? ""}
             className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
             placeholder="Enter your Github Link"
           ></Input>
@@ -196,7 +214,7 @@ export function MutateResumeSection({ setIsContainerVisible, setMadeChangeToResu
             type="submit"
             className="mb-20 h-[50px] w-[100%] cursor-pointer bg-blue-500 text-white hover:bg-blue-800 hover:text-white"
           >
-            Create Resume
+            {isEditMode ? "Update" : "Create"} Resume
           </Button>
         </CardFooter>
       </Card>

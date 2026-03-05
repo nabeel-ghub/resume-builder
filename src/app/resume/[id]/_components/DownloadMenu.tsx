@@ -2,6 +2,7 @@
 import { Button } from "~/components/ui/button";
 import { FaFilePdf, FaFileWord, FaArrowLeft } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { generateDocx } from "./generateDocx";
 
 
 interface MenuProps {
@@ -33,13 +34,13 @@ export function DownloadMenu({ resumeName, onPrint, onDocx }: MenuProps) {
         <div className="flex gap-3">
           <Button 
             onClick={onDocx}
-            className="bg-blue-600 text-white hover:bg-blue-700 h-9"
+            className="bg-blue-600 text-white hover:bg-blue-700 h-9 cursor-pointer"
           >
             <FaFileWord className="mr-2" /> DOCX
           </Button>
           <Button 
             onClick={onPrint}
-            className="bg-red-600 text-white hover:bg-red-700 h-9"
+            className="bg-red-600 text-white hover:bg-red-700 h-9 cursor-pointer"
           >
             <FaFilePdf className="mr-2" /> PDF
           </Button>

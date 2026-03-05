@@ -11,7 +11,7 @@ type skill = {
 
 interface SkillSectionProps {
   skills: skill[] | null;
-  setSkills: React.Dispatch<React.SetStateAction<skill[] | null>>;
+  setSkills: React.Dispatch<React.SetStateAction<skill[]>>;
   skillRef: React.RefObject<HTMLInputElement | null>;
 }
 

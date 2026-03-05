@@ -21,16 +21,20 @@ import { IoIosAdd } from "react-icons/io";
 
 export function ResumeSection() {
   const [isContainerVisible, setIsContainerVisible] = useState<boolean>(false);
-  const [madeChangeToResume, setMadeChangeToResume] = useState<boolean>(false);
-
   const { data: resumeData, isLoading, error } = api.resume.getAll.useQuery();
+  const [initialData, setInitialData] = useState<Resume>();
+
+  function handleEdit(resume: Resume) {
+    setInitialData(resume);
+    setIsContainerVisible(true);
+  }
 
   return (
     <div className="flex h-[85%] w-[80%] flex-col self-center">
       <>
         <Button
           onClick={() => setIsContainerVisible(true)}
-          className="ease h-[40px] w-auto cursor-pointer self-end bg-white text-left text-blue-500 transition-colors duration-[0.2s] hover:bg-blue-500 hover:text-white"
+          className="ease h-[40px] w-auto cursor-pointer self-end bg-white text-left text-blue-600 transition-colors duration-[0.2s] hover:bg-blue-600 hover:text-white"
         >
           <IoIosAdd></IoIosAdd>Create new Resume
         </Button>
@@ -50,11 +54,11 @@ export function ResumeSection() {
         )}
         {isContainerVisible && (
           <MutateResumeSection
+            initialData={initialData ? initialData : undefined}
             setIsContainerVisible={setIsContainerVisible}
-            setMadeChangeToResume={setMadeChangeToResume}
           />
         )}
-        <ResumeList resumeData={resumeData} />
+        <ResumeList onEdit={(resume: Resume) => handleEdit(resume)} resumeData={resumeData} />
       </>
     </div>
   );
