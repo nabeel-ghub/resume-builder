@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { index, pgTableCreator, primaryKey } from "drizzle-orm/pg-core";
+import { pgTableCreator, index, primaryKey } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
 /**
@@ -10,26 +10,63 @@ import { type AdapterAccount } from "next-auth/adapters";
  */
 export const createTable = pgTableCreator((name) => `resume-builder_${name}`);
 
-export const posts = createTable(
-  "post",
-  (d) => ({
-    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    name: d.varchar({ length: 256 }),
-    createdById: d
-      .varchar({ length: 255 })
-      .notNull()
-      .references(() => users.id),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .$defaultFn(() => /* @__PURE__ */ new Date())
-      .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
-  }),
-  (t) => [
-    index("created_by_idx").on(t.createdById),
-    index("name_idx").on(t.name),
-  ],
-);
+export const resumes = createTable("resume", (d) => ({
+  id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+  userId: d.varchar("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  name: d.varchar("name", { length: 256 }).notNull(),
+  phone: d.varchar("phone", { length: 20 }),
+  email: d.varchar("email", { length: 256 }),
+  address: d.text("address"),
+  summary: d.text("summary"),
+  skills: d
+    .jsonb("skills")
+    .$type<{ id: number; title: string }[]>()
+    .default([]),
+  github: d.varchar("github", { length: 256 }),
+  linkedin: d.varchar("linkedin", { length: 256 }),
+  experiences: d
+    .jsonb("experiences")
+    .$type<
+      {
+        id: string;
+        title: string;
+        role: string;
+        link?: string;
+        description: string;
+        bullet1: string | null;
+        bullet2: string | null;
+        bullet3: string | null;
+      }[]>()
+    .default([]),
+    projects: d
+    .jsonb("projects")
+    .$type<
+      {
+        id: string;
+        title: string;
+        role: string;
+        link?: string;
+        description: string;
+        bullet1: string | null;
+        bullet2: string | null;
+        bullet3: string | null;
+      }[]>()
+    .default([]),
+    educations: d
+    .jsonb("educations")
+    .$type<
+      {
+        id: string;
+        title: string;
+        role: string;
+        link?: string;
+        description: string;
+        bullet1: string | null;
+        bullet2: string | null;
+        bullet3: string | null;
+      }[]>()
+    .default([]),
+}));
 
 export const users = createTable("user", (d) => ({
   id: d
