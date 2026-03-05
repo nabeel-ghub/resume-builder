@@ -29,18 +29,22 @@ export const resumeRouter = createTRPCRouter({
         experiences: z.array(resumeItemSchema),
         projects: z.array(resumeItemSchema),
         educations: z.array(resumeItemSchema),
-      })
+      }),
     )
+
     .mutation(async ({ ctx, input }) => {
-      const newResume = await ctx.db.insert(resumes).values({
-        ...input,
-        userId: ctx.user.id,
-      }).returning();
-      
+      const newResume = await ctx.db
+        .insert(resumes)
+        .values({
+          ...input,
+          userId: ctx.user.id,
+        })
+        .returning();
+
       return newResume[0];
     }),
 
-  getMyResumes: protectedProcedure.query(async ({ ctx }) => {
+  getAll: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db
       .select()
       .from(resumes)
@@ -50,8 +54,59 @@ export const resumeRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.delete(resumes).where(and( // Import 'and' from 'drizzle-orm'
-            eq(resumes.id, input.id),
-            eq(resumes.userId, ctx.user.id)));
+      return await ctx.db
+        .delete(resumes)
+        .where(and(eq(resumes.id, input.id), eq(resumes.userId, ctx.user.id)));
+    }),
+
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        name: z.string().min(1),
+        email: z.string().email().optional().or(z.literal("")),
+        phone: z.string().optional(),
+        address: z.string().optional(),
+        summary: z.string().optional(),
+        github: z.string().optional(),
+        linkedin: z.string().optional(),
+        skills: z.array(z.object({ id: z.number(), title: z.string() })),
+        experiences: z.array(resumeItemSchema),
+        projects: z.array(resumeItemSchema),
+        educations: z.array(resumeItemSchema),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...updateData } = input;
+
+      const [updatedResume] = await ctx.db
+        .update(resumes)
+        .set({
+          ...updateData,
+          lastEdited: new Date(),
+        })
+        .where(and(eq(resumes.id, id), eq(resumes.userId, ctx.user.id)))
+        .returning();
+
+      if (!updatedResume) {
+        throw new Error("Resume not found or unauthorized");
+      }
+
+      return updatedResume;
+    }),
+
+  getById: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const [resume] = await ctx.db
+        .select()
+        .from(resumes)
+        .where(and(eq(resumes.id, input.id), eq(resumes.userId, ctx.user.id)));
+
+      if (!resume) {
+        throw new Error("Resume not found or unauthorized");
+      }
+
+      return resume;
     }),
 });

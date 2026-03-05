@@ -1,3 +1,4 @@
+import { create } from "domain";
 import { relations } from "drizzle-orm";
 import { pgTableCreator, index, primaryKey } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
@@ -66,6 +67,13 @@ export const resumes = createTable("resume", (d) => ({
         bullet3: string | null;
       }[]>()
     .default([]),
+    lastEdited: d
+  .timestamp("last_edited", { mode: "date", withTimezone: true })
+  .defaultNow()
+  .notNull(),
+  createdAt: d
+    .timestamp("created_at", { mode: "date", withTimezone: true })
+    .defaultNow()
 }));
 
 export const users = createTable("user", (d) => ({

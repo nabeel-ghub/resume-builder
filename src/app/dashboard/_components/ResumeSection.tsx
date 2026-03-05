@@ -1,19 +1,60 @@
 "use client";
 import { useState, useEffect } from "react";
 import { ResumeList } from "./ResumeList";
+import { MutateResumeSection } from "./MutateResumeSection";
+import { api } from "~/trpc/react";
+import { type RouterOutputs } from "~/trpc/react";
+type Resume = RouterOutputs["resume"]["getAll"][number];
+
+//Ui Components and Icons
 import { Button } from "~/components/ui/button";
-import { IoIosAdd, IoIosRemove } from "react-icons/io";
-import { CreateResumeSection } from "./CreateResumeSection";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "~/components/ui/empty";
+import { Spinner } from "~/components/ui/spinner";
+import { IoIosAdd } from "react-icons/io";
 
 export function ResumeSection() {
   const [isContainerVisible, setIsContainerVisible] = useState<boolean>(false);
+  const [madeChangeToResume, setMadeChangeToResume] = useState<boolean>(false);
+
+  const { data: resumeData, isLoading, error } = api.resume.getAll.useQuery();
 
   return (
     <div className="flex h-[85%] w-[80%] flex-col self-center">
       <>
-        <Button onClick={() => setIsContainerVisible(true)} className="h-[40px] w-auto cursor-pointer self-end hover:bg-blue-500 hover:text-white text-left bg-white text-blue-500 transition-colors duration-[0.2s] ease"><IoIosAdd></IoIosAdd>Create new Resume</Button>
-        {isContainerVisible && <CreateResumeSection setIsContainerVisible={setIsContainerVisible} />}
-        <ResumeList />
+        <Button
+          onClick={() => setIsContainerVisible(true)}
+          className="ease h-[40px] w-auto cursor-pointer self-end bg-white text-left text-blue-500 transition-colors duration-[0.2s] hover:bg-blue-500 hover:text-white"
+        >
+          <IoIosAdd></IoIosAdd>Create new Resume
+        </Button>
+        {isLoading && (
+          <Empty className="w-full">
+            <EmptyHeader>
+              <EmptyMedia variant="icon" className="bg-blue-500 text-white">
+                <Spinner />
+              </EmptyMedia>
+              <EmptyTitle className="text-blue-500 text-2xl">Loading your resumes</EmptyTitle>
+              <EmptyDescription className="text-gray-400">
+                Please wait while your resumes are loading. Do not refresh the
+                page.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        )}
+        {isContainerVisible && (
+          <MutateResumeSection
+            setIsContainerVisible={setIsContainerVisible}
+            setMadeChangeToResume={setMadeChangeToResume}
+          />
+        )}
+        <ResumeList resumeData={resumeData} />
       </>
     </div>
   );

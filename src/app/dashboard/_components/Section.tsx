@@ -141,6 +141,26 @@ export function Section({
     });
   }
 
+  function handleChangeInputs(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, reference: React.RefObject<HTMLInputElement | HTMLTextAreaElement | null>, id?: string) {
+    if (!reference.current) return;
+    sectionArraySetterFunction((prev) => {
+      if (!prev) return [];
+      return prev.map((item) => {
+        if(!reference.current) return item;
+        if (item.id === id) {
+          return {
+            ...item,
+            [reference.current.name]: reference.current.value,
+          };
+        } else {
+          return item;
+        }
+    })
+  })
+}
+
+
+
   return (
     <>
       <Label className="mb-2 text-white">
@@ -225,35 +245,58 @@ export function Section({
                     <Input
                       className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
                       defaultValue={currSection.title}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeInputs(e, titleRef, currSection.id)}
+                      ref={titleRef}
+                      name="title"
                     ></Input>
                     <Input
                       className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
                       defaultValue={currSection.role}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeInputs(e, roleRef, currSection.id)}
+                      ref={roleRef}
+                      name="role"
                     ></Input>
+                    {currSection.link && 
                     <Input
                       className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
                       defaultValue={currSection.link}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeInputs(e, linkRef)}
+                      ref={linkRef}
+                      name="link"
                     ></Input>
+                    }
                     <Textarea
                       className="mb-5 min-h-[90px] w-[100%] resize-none rounded-md text-white caret-white"
                       defaultValue={currSection.description}
+                      onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => handleChangeInputs(e, descriptionRef)}
+                      ref={descriptionRef}
+                      name="description"
                     ></Textarea>
                     {currSection.bullet1 && (
                       <Input
                         className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
                         defaultValue={currSection.bullet1}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeInputs(e, bullet1Ref)}
+                        ref={bullet1Ref}
+                        name="bullet1"
                       ></Input>
                     )}
                     {currSection.bullet2 && (
                       <Input
                         className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
                         defaultValue={currSection.bullet2}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeInputs(e, bullet2Ref)}
+                        ref={bullet2Ref}
+                        name="bullet2"
                       ></Input>
                     )}
                     {currSection.bullet3 && (
                       <Input
                         className="mb-5 h-[35px] w-[100%] rounded-md text-white caret-white"
                         defaultValue={currSection.bullet3}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeInputs(e, bullet3Ref)}
+                        ref={bullet3Ref}
+                        name="bullet3"
                       ></Input>
                     )}
                   </motion.div>

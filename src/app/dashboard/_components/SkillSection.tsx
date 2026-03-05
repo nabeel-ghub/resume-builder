@@ -52,7 +52,7 @@ export function SkillSection({skills, setSkills, skillRef}: SkillSectionProps) {
         <>
           <AnimatePresence>
             {skills?.map((skill, index) => (
-              <motion.input
+              <motion.button
                 key={skill.id}
                 name={`skill-${index}`}
                 initial={{ opacity: 0, x: -20 }}
@@ -61,10 +61,11 @@ export function SkillSection({skills, setSkills, skillRef}: SkillSectionProps) {
                 transition={{ duration: 0.3 }}
                 onClick={() => removeSkill(skill.id)}
                 onFocus={() => removeSkill(skill.id)}
-                defaultValue={skill.title}
-                className="mr-3 mb-2 flex h-8 w-32 cursor-pointer items-center justify-center rounded-md border-[1.5px] border-dotted border-blue-500 bg-transparent pr-5 pl-5 text-white hover:border-red-600 hover:text-red-600"
+                type="button"
+                className="mr-3 mb-2 flex h-8 w-auto cursor-pointer items-center justify-center rounded-md border-[1.5px] border-dotted border-blue-500 bg-transparent pr-5 pl-5 text-white hover:border-red-600 hover:text-red-600"
               >
-              </motion.input>
+                {skill.title}
+              </motion.button>
             ))}
           </AnimatePresence>
           <div className="flex flex-row flex-nowrap">

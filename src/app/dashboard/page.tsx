@@ -3,6 +3,8 @@ import { HydrateClient } from "~/trpc/server";
 import { redirect } from "next/navigation";
 import { ResumeSection } from "./_components/ResumeSection";
 import { MenuSection } from "./_components/MenuSection";
+import { db } from "~/server/db";
+import { users } from "~/server/db/schema";
 
 
 export default async function Dashboard() {
@@ -12,6 +14,15 @@ export default async function Dashboard() {
     if(!user) {
         redirect("/")
     }
+
+  if (user) {
+    await db.insert(users).values({
+      id: user.id,
+      name: user.user_metadata.full_name ?? "Guest",
+      email: user.email ?? " ",
+      image: user.user_metadata.avatar_url,
+    }).onConflictDoNothing();
+  }
 
     return(
         <HydrateClient>
