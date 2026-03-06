@@ -27,38 +27,6 @@ A high-performance, type-safe web application designed to help users build, mana
 
 ---
 
-### 🚀 Getting Started
-
-#### 1. Setup Environment Variables
-
-Create a `.env` file in the root directory and configure your database and Supabase keys:
-
-```env
-# Database connection (via Transaction Pooler)
-DATABASE_URL="postgresql://postgres:[ID]:[PASS]@[HOST]:6543/postgres?sslmode=require&supavisor=true"
-
-# Supabase Auth & Storage
-NEXT_PUBLIC_SUPABASE_URL="your-supabase-url"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
-
-```
-
-#### 2. Install & Run
-
-```bash
-# Install dependencies
-npm install
-
-# Push database schema
-npm run db:push
-
-# Start the development server
-npm run dev
-
-```
-
----
-
 ### 📂 Architecture Overview
 
 ```text
