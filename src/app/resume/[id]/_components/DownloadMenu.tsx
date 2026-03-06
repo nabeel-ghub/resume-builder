@@ -20,7 +20,7 @@ export function DownloadMenu({ resumeName, onPrint, onDocx }: MenuProps) {
           <Button 
             variant="ghost" 
             size="sm" 
-            className="text-zinc-400 cursor-pointer"
+            className="text-zinc-400 hover:text-zinc-900 cursor-pointer"
             onClick={() => {
               if (window.history.length > 1) {
                 router.back();

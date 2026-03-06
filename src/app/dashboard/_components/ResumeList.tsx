@@ -7,7 +7,8 @@ import { FaEye } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
 import { AiFillDelete } from "react-icons/ai";
 import { api } from "~/trpc/react";
-
+import { useState } from "react";
+import { Spinner } from "~/components/ui/spinner";
 
 interface ResumeListProps {
   resumeData: Resume[] | undefined;
@@ -15,22 +16,23 @@ interface ResumeListProps {
 }
 
 export function ResumeList({ resumeData, onEdit }: ResumeListProps) {
-    const utils = api.useUtils();
+  const utils = api.useUtils();
+  const deleteMutation = api.resume.delete.useMutation({
+    onSuccess: () => {
+      void utils.resume.getAll.invalidate();
+    },
+    onError: (err) => {
+      alert(err.message);
+    },
+  });
 
-    const deleteMutation = api.resume.delete.useMutation({
-  onSuccess: () => {
-    void utils.resume.getAll.invalidate();
-  },
-  onError: (err) => {
-    alert(err.message);
-  }
-});
-
-const handleDelete = (id: number) => {
-  if (window.confirm("Are you sure you want to delete this resume?")) {
-    deleteMutation.mutate({ id });
-  }
-};
+  const handleDelete = (id: number) => {
+    if (window.confirm("Are you sure you want to delete this resume?")) {
+      deleteMutation.mutate({ id });
+    } else {
+      
+    }
+  };
 
   return (
     <>
@@ -61,10 +63,19 @@ const handleDelete = (id: number) => {
               {resume.summary}
             </p>
             <div className="mt-5">
-              <Button onClick={() => onEdit(resume)} className="h-[40px] w-[60px] cursor-pointer bg-blue-600 hover:bg-blue-700" title="Edit this resume">
+              <Button
+                onClick={() => onEdit(resume)}
+                className="h-[40px] w-[60px] cursor-pointer bg-blue-600 hover:bg-blue-700"
+                title="Edit this resume"
+              >
                 <FiEdit2></FiEdit2>
               </Button>
-              <Button onClick={() => handleDelete(resume.id)} variant={"destructive"} className="h-[40px] w-[60px] ml-2 border-[0] hover:border-[1.5px] hover:border-red-600 hover:border-dotted transition-all duration-[0.3s] ease cursor-pointer" title="Delete this resume">
+              <Button
+                onClick={() => handleDelete(resume.id)}
+                variant={"destructive"}
+                className="ease ml-2 h-[40px] w-[60px] cursor-pointer border-[0] transition-all duration-[0.3s] hover:border-[1.5px] hover:border-dotted hover:border-red-600"
+                title="Delete this resume"
+              >
                 <AiFillDelete></AiFillDelete>
               </Button>
             </div>

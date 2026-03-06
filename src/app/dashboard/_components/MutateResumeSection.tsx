@@ -9,8 +9,10 @@ import {
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { Spinner } from "~/components/ui/spinner";
 import { Textarea } from "~/components/ui/textarea";
 import { MdCloseFullscreen } from "react-icons/md";
+import { FaRegFaceFrown } from "react-icons/fa6";
 import { useRef, useState } from "react";
 import { SkillSection } from "./SkillSection";
 import { Section } from "./Section";
@@ -48,6 +50,13 @@ export function MutateResumeSection({ setIsContainerVisible, initialData, setIni
       void utils.resume.getAll.invalidate();
       inputCleanup()
     },
+    onError: () => {
+      setIsError(true)
+      setTimeout(() => {
+        setIsError(false)
+      }, 2000)
+      setSpinnerStatus(false)
+    }
   });
 
   const updateResume = api.resume.update.useMutation({
@@ -77,9 +86,12 @@ export function MutateResumeSection({ setIsContainerVisible, initialData, setIni
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [isAddingExperience, setIsAddingExperience] = useState(false);
   const [isAddingEducation, setIsAddingEducation] = useState(false);
+  const [spinnerStatus, setSpinnerStatus] = useState<boolean>();
+  const [isError, setIsError] = useState<boolean>();
 
   function handleSaveResume(e: React.FormEvent) {
     e.preventDefault();
+    setSpinnerStatus(true)
     const payload = {
       name: nameRef.current?.value ?? "",
       phone: phoneRef.current?.value ?? "",
@@ -225,9 +237,10 @@ export function MutateResumeSection({ setIsContainerVisible, initialData, setIni
         <CardFooter className="border-[0] bg-transparent">
           <Button
             type="submit"
-            className=" h-[50px] w-[100%] cursor-pointer bg-blue-500 text-white hover:bg-blue-800 hover:text-white"
+            data-error={isError}
+            className="h-[50px] w-[100%] data-[error=true]:bg-red-800 cursor-pointer bg-blue-500 text-white hover:bg-blue-800 hover:text-white"
           >
-            {isEditMode ? "Update" : "Create"} Resume
+            {spinnerStatus && <Spinner data-icon="inline-start"/>}{isError && <FaRegFaceFrown/>}{isEditMode ? "Update" : "Create"} Resume
           </Button>
         </CardFooter>
       </Card>
