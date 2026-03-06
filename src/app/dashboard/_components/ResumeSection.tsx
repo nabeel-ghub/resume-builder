@@ -20,13 +20,15 @@ import { IoIosAdd } from "react-icons/io";
 
 export function ResumeSection() {
   const [isContainerVisible, setIsContainerVisible] = useState<boolean>(false);
-  const { data: resumeData, isLoading } = api.resume.getAll.useQuery();
+  const { data: resumeData, isLoading, error } = api.resume.getAll.useQuery();
   const [initialData, setInitialData] = useState<Resume>();
 
   function handleEdit(resume: Resume) {
     setInitialData(resume);
     setIsContainerVisible(true);
   }
+
+  console.log("*** get failed", error)
 
   return (
     <div className="flex h-[85%] w-[80%] flex-col self-center mb-20">
