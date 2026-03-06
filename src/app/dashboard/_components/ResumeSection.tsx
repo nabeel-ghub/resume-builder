@@ -28,8 +28,6 @@ export function ResumeSection() {
     setIsContainerVisible(true);
   }
 
-  console.log("*** get failed", error)
-
   return (
     <div className="flex h-[85%] w-[80%] flex-col self-center mb-20">
       <>
@@ -55,6 +53,7 @@ export function ResumeSection() {
         )}
         {isContainerVisible && (
           <MutateResumeSection
+            setInitialData={setInitialData}
             initialData={initialData ?? initialData}
             setIsContainerVisible={setIsContainerVisible}
           />

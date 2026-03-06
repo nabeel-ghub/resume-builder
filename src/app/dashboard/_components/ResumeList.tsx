@@ -50,6 +50,7 @@ const handleDelete = (id: number) => {
               <Button
                 onClick={() => (window.location.href = `/resume/${resume.id}`)}
                 className="h-[40px] w-[60px] cursor-pointer bg-white text-blue-600 hover:bg-blue-700 hover:text-white"
+                title="View the resume"
               >
                 <FaEye></FaEye>
               </Button>
@@ -60,10 +61,10 @@ const handleDelete = (id: number) => {
               {resume.summary}
             </p>
             <div className="mt-5">
-              <Button onClick={() => onEdit(resume)} className="h-[40px] w-[60px] cursor-pointer bg-blue-600 hover:bg-blue-700">
+              <Button onClick={() => onEdit(resume)} className="h-[40px] w-[60px] cursor-pointer bg-blue-600 hover:bg-blue-700" title="Edit this resume">
                 <FiEdit2></FiEdit2>
               </Button>
-              <Button onClick={() => handleDelete(resume.id)} variant={"destructive"} className="h-[40px] w-[60px] ml-2 border-[0] hover:border-[1.5px] hover:border-red-600 hover:border-dotted transition-all duration-[0.3s] ease cursor-pointer">
+              <Button onClick={() => handleDelete(resume.id)} variant={"destructive"} className="h-[40px] w-[60px] ml-2 border-[0] hover:border-[1.5px] hover:border-red-600 hover:border-dotted transition-all duration-[0.3s] ease cursor-pointer" title="Delete this resume">
                 <AiFillDelete></AiFillDelete>
               </Button>
             </div>

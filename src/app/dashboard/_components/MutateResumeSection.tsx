@@ -20,6 +20,7 @@ type Resume = RouterOutputs["resume"]["getAll"][number];
 interface Props {
   setIsContainerVisible: React.Dispatch<React.SetStateAction<boolean>>;
   initialData?: Resume;
+  setInitialData: React.Dispatch<React.SetStateAction<Resume | undefined>>;
 }
 
 type skill = {
@@ -38,14 +39,14 @@ type section = {
   bullet3: string | null;
 };
 
-export function MutateResumeSection({ setIsContainerVisible, initialData }: Props) {
+export function MutateResumeSection({ setIsContainerVisible, initialData, setInitialData }: Props) {
   const isEditMode = !!initialData;
 
   const utils = api.useUtils(); // For cache invalidation
   const createResume = api.resume.create.useMutation({
     onSuccess: () => {
       void utils.resume.getAll.invalidate();
-      setIsContainerVisible(false);
+      inputCleanup()
     },
   });
 
@@ -53,7 +54,7 @@ export function MutateResumeSection({ setIsContainerVisible, initialData }: Prop
     onSuccess: () => {
       void utils.resume.getAll.invalidate(); // Refresh the list
       void utils.resume.getById.invalidate({ id: initialData?.id }); // Refresh specific view
-      setIsContainerVisible(false);
+      inputCleanup()
     },
   });
 
@@ -79,7 +80,6 @@ export function MutateResumeSection({ setIsContainerVisible, initialData }: Prop
 
   function handleSaveResume(e: React.FormEvent) {
     e.preventDefault();
-    
     const payload = {
       name: nameRef.current?.value ?? "",
       phone: phoneRef.current?.value ?? "",
@@ -101,6 +101,18 @@ export function MutateResumeSection({ setIsContainerVisible, initialData }: Prop
     }
   }
 
+  function inputCleanup() {
+    setInitialData(undefined)
+    if(nameRef.current) nameRef.current.defaultValue = "";
+    if(phoneRef.current)  phoneRef.current.value = "";
+    if(emailRef.current)  emailRef.current.value = "";
+    if(addressRef.current)  addressRef.current.value = "";
+    if(summaryRef.current)  summaryRef.current.value = "";
+    if(linkedinRef.current)  linkedinRef.current.value = "";
+    if(githubRef.current)  githubRef.current.value = "";
+    setIsContainerVisible(false)
+  }
+
   return (
     <form
       onSubmit={handleSaveResume}
@@ -113,7 +125,7 @@ export function MutateResumeSection({ setIsContainerVisible, initialData }: Prop
               Fill in the details
             </Label>
             <Button
-              onClick={() => setIsContainerVisible(false)}
+              onClick={() => inputCleanup()}
               className="ease h-[20px] w-[20px] cursor-pointer rounded-sm bg-white p-3 text-blue-500 transition-colors duration-[0.2s] hover:bg-blue-500 hover:text-white"
             >
               <MdCloseFullscreen size={5}></MdCloseFullscreen>

@@ -21,7 +21,7 @@ export function MenuSection({ user }: { user: User }) {
       <h2 className="pt-1 text-[25px] font-[500] text-white font-[700]">
         {firstName}&apos;s <span className="text-blue-500">Dashboard</span>
       </h2>
-      <Button variant={"destructive"} onClick={() => signOut()} className="hover:border-dotted hover:border-[1.5px] hover:border-red-700 cursor-pointer transition-colors duration-[0.4s] ease">Sign out<FaSignOutAlt></FaSignOutAlt></Button>
+      <Button variant={"default"} onClick={() => signOut()} className="hover:border-dotted h-10 w-30 uppercase text-sm tracking-[1.3px] font-semibold bg-transparent hover:text-red-600 cursor-pointer transition-colors duration-[0.3s] ease" title="Sign out of your dashboard">Sign out<FaSignOutAlt></FaSignOutAlt></Button>
     </div>
   );
 }
