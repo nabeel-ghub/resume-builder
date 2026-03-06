@@ -4,6 +4,17 @@ import { api } from "~/trpc/react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { DownloadMenu } from "./_components/DownloadMenu";
 
+type section = {
+  id: string;
+  title: string;
+  role: string;
+  link?: string;
+  description: string;
+  bullet1: string | null;
+  bullet2: string | null;
+  bullet3: string | null;
+}
+
 export default function ViewResumePage() {
   const params = useParams();
   const id = Number(params.id);
@@ -29,7 +40,7 @@ export default function ViewResumePage() {
     }
 
   return (
-    /* Main Wrapper: flex + items-center ensures the resume stays in the middle */
+    //Main Wrapper
     <div className="resume-ready flex min-h-screen w-full flex-col items-center bg-zinc-950 p-4 font-sans text-slate-200 md:p-10 print:bg-white print:p-0">
       <div className="no-print mb-6 w-full max-w-[800px]">
         <DownloadMenu
@@ -39,7 +50,6 @@ export default function ViewResumePage() {
         />
       </div>
 
-      {/* THE PAPER: Added 'max-w-full' and changed 'w-[800px]' logic to ensure it doesn't leak on iOS */}
       <div className="mx-auto min-h-[1132px] w-full max-w-[800px] rounded-sm bg-white p-6 text-black shadow-2xl md:p-12 print:m-0 print:max-w-none print:rounded-none print:shadow-none">
         {/* Header Section */}
         <header className="mb-6 flex flex-col items-center space-y-3 border-b-2 border-slate-900 pb-4">
@@ -138,8 +148,9 @@ export default function ViewResumePage() {
   );
 }
 
-function ResumeSection({ title, items }: { title: string; items: any[] }) {
-  if (!items || items.length === 0) return null;
+type ResumeSectionProps = { title: string; items: section[] };
+function ResumeSection({ title, items }: ResumeSectionProps) {
+  if (!items || items.length === 0) return <div className="mb-8"><h2 className="mb-4 border-b text-lg font-bold">{title}</h2><p className="text-sm text-muted-foreground">No items available.</p></div>;
   return (
     <section className="mb-8">
       <h2 className="mb-4 border-b text-lg font-bold">{title}</h2>

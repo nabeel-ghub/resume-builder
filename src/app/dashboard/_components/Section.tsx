@@ -6,7 +6,6 @@ import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { Button } from "~/components/ui/button";
 import { AiFillDelete } from "react-icons/ai";
-import { link } from "fs";
 
 type section = {
   id: string;

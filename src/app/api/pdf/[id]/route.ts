@@ -71,7 +71,7 @@ export async function GET(
       ],
     });
 
-    console.log(data)
+    // ...existing code...
 
     return new Response(Buffer.from(pdf), {
       status: 200,

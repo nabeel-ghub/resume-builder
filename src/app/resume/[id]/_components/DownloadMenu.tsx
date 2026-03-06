@@ -21,7 +21,13 @@ export function DownloadMenu({ resumeName, onPrint, onDocx }: MenuProps) {
             variant="ghost" 
             size="sm" 
             className="text-zinc-400 cursor-pointer"
-            onClick={() => router.back()}
+            onClick={() => {
+              if (window.history.length > 1) {
+                router.back();
+              } else {
+                router.push('/dashboard'); // fallback route
+              }
+            }}
           > 
             <FaArrowLeft className="mr-2" /> Back
           </Button>
