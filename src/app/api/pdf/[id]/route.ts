@@ -42,7 +42,7 @@ export async function GET(
 
     try {
       await page.waitForSelector(".resume-ready", { timeout: 10000 });
-    } catch (e) {
+    } catch {
       console.error("Timed out waiting for resume data");
     }
 
@@ -71,7 +71,7 @@ export async function GET(
       ],
     });
 
-    // ...existing code...
+    console.log(data)
 
     return new Response(Buffer.from(pdf), {
       status: 200,

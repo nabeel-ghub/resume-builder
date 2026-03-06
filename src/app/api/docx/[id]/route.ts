@@ -114,7 +114,7 @@ export async function GET(
               new Paragraph({
                 children: [
                   new TextRun({
-                    text: mainResume.summary || "",
+                    text: mainResume.summary ?? "",
                     size: 22,
                     font: "Calibri",
                     color: "000000",
@@ -213,14 +213,14 @@ export async function GET(
           spacing: { before: 150, after: 150 },
           children: [
             new TextRun({
-              text: item.title || item.company || "",
+              text: item.title ?? item.company ?? "",
               bold: true,
               size: 22,
               font: "Calibri",
               color: "000000",
             }),
             new TextRun({
-              text: ` - ${item.role || ""}`,
+              text: ` - ${item.role ?? ""}`,
               italics: true,
               size: 18,
               font: "Calibri",
@@ -232,7 +232,7 @@ export async function GET(
             spacing: {before: 150, after: 150},
           children: [
             new TextRun({
-              text: item.description || "",
+              text: item.description ?? "",
               size: 19,
               font: "Calibri",
               color: "333333",
@@ -265,7 +265,7 @@ export async function GET(
 
     const resend = new Resend(env.RESEND_TOKEN);
 
-    /*const data = await resend.emails.send({
+    const data = await resend.emails.send({
       from: 'Resume Builder <onboarding@resend.dev>',
       to: [targetEmail ?? ""],
       subject: 'Your Professional Resume from Resume Builder',
@@ -276,7 +276,9 @@ export async function GET(
           content: Buffer.from(buffer), // The Puppeteer output
         },
       ],
-    });*/
+    });
+
+    console.log(data);
 
     return new Response(Buffer.from(buffer), {
       headers: {

@@ -1,6 +1,7 @@
 import { createClient } from "~/utils/supabase/server";
 import { HydrateClient } from "~/trpc/server";
 import { SignInWithGoogle } from "./_components/SignInWithGoogle";
+import type { User } from "@supabase/supabase-js";
 
 export default async function Home() {
   // 1. Initialize Supabase Server Client
@@ -8,9 +9,10 @@ export default async function Home() {
 
   // 2. Fetch the user once on the server
   const {data: { user }} = await supabase.auth.getUser();
+  const typedUser: User | null = user ?? null;
 
   // 3. Extract metadata safely
-  const firstName = user?.user_metadata?.given_name ?? user?.user_metadata?.full_name?.split(" ")[0];
+  const firstName = user?.user_metadata?.full_name?.split(" ")[0] ?? "User";
 
   return (
     <HydrateClient>
@@ -28,7 +30,7 @@ export default async function Home() {
             </h2>
           </div>
           <div className="flex flex-col items-center mt-10 w-full">
-            <SignInWithGoogle initialUser={user} firstName={firstName}/>
+            <SignInWithGoogle initialUser={typedUser}/>
         </div>
       </main>
     </HydrateClient>

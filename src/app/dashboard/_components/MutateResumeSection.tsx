@@ -11,7 +11,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { MdCloseFullscreen } from "react-icons/md";
-import { useRef, useState, type FormEvent } from "react";
+import { useRef, useState } from "react";
 import { SkillSection } from "./SkillSection";
 import { Section } from "./Section";
 import { type RouterOutputs } from "~/trpc/react";

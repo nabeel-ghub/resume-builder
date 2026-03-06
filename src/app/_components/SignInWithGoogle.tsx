@@ -8,10 +8,9 @@ import { Button } from "~/components/ui/button";
 
 interface SignInWithGoogleProps {
   initialUser: User | null;
-  firstName: string;
 }
 
-export function SignInWithGoogle({initialUser, firstName}: SignInWithGoogleProps) {
+export function SignInWithGoogle({initialUser}: SignInWithGoogleProps) {
   const supabase = createClient();
   const router = useRouter();
 

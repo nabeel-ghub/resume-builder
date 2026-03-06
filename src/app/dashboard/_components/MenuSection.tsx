@@ -14,10 +14,12 @@ export function MenuSection({ user }: { user: User }) {
     router.push("/")
   };
 
+  const firstName = user?.user_metadata?.full_name?.split(" ")[0] ?? "User";
+
   return (
     <div className="flex min-h-[20vh] w-[100%] items-center justify-between pr-[20px] pl-[20px]">
       <h2 className="pt-1 text-[25px] font-[500] text-white font-[700]">
-        {user?.user_metadata.full_name.split(" ")[0]}'s <span className="text-blue-500">Dashboard</span>
+        {firstName}&apos;s <span className="text-blue-500">Dashboard</span>
       </h2>
       <Button variant={"destructive"} onClick={() => signOut()} className="hover:border-dotted hover:border-[1.5px] hover:border-red-700 cursor-pointer transition-colors duration-[0.4s] ease">Sign out<FaSignOutAlt></FaSignOutAlt></Button>
     </div>

@@ -18,9 +18,9 @@ export default async function Dashboard() {
   if (user) {
     await db.insert(users).values({
       id: user.id,
-      name: user.user_metadata.full_name ?? "Guest",
+      name: (user.user_metadata?.full_name as string) ?? "User",
       email: user.email ?? " ",
-      image: user.user_metadata.avatar_url,
+      image: (user.user_metadata?.avatar_url as string) ?? null,
     }).onConflictDoNothing();
   }
 

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ResumeList } from "./ResumeList";
 import { MutateResumeSection } from "./MutateResumeSection";
 import { api } from "~/trpc/react";
@@ -10,7 +10,6 @@ type Resume = RouterOutputs["resume"]["getAll"][number];
 import { Button } from "~/components/ui/button";
 import {
   Empty,
-  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
@@ -21,16 +20,13 @@ import { IoIosAdd } from "react-icons/io";
 
 export function ResumeSection() {
   const [isContainerVisible, setIsContainerVisible] = useState<boolean>(false);
-  const { data: resumeData, isLoading, error } = api.resume.getAll.useQuery();
+  const { data: resumeData, isLoading } = api.resume.getAll.useQuery();
   const [initialData, setInitialData] = useState<Resume>();
 
   function handleEdit(resume: Resume) {
     setInitialData(resume);
     setIsContainerVisible(true);
   }
-
-  const utils = api.useUtils();
-
 
   return (
     <div className="flex h-[85%] w-[80%] flex-col self-center mb-20">
@@ -57,7 +53,7 @@ export function ResumeSection() {
         )}
         {isContainerVisible && (
           <MutateResumeSection
-            initialData={initialData ? initialData : undefined}
+            initialData={initialData ?? initialData}
             setIsContainerVisible={setIsContainerVisible}
           />
         )}
