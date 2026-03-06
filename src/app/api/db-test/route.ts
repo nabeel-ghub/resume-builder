@@ -1,12 +1,13 @@
 import { db } from "~/server/db";
-import { sql } from "drizzle-orm";
+import { resumes } from "~/server/db/schema"; // Ensure this import is correct
 
 export async function GET() {
   try {
-    const result = await db.execute(sql`SELECT NOW()`);
+    const result = await db.select().from(resumes).limit(1);
     return new Response(JSON.stringify(result), { status: 200 });
   } catch (e: unknown) {
-    const errorMessage = e instanceof Error ? e.message : "An unknown error occurred";
-    return new Response(errorMessage, { status: 500 });
+    const msg = e instanceof Error ? e.message : "Unknown error";
+    // This will tell us if it's "relation 'resumes' does not exist"
+    return new Response(msg, { status: 500 });
   }
 }
