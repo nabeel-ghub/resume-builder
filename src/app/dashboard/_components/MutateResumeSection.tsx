@@ -44,6 +44,7 @@ export function MutateResumeSection({ setIsContainerVisible, initialData }: Prop
   const utils = api.useUtils(); // For cache invalidation
   const createResume = api.resume.create.useMutation({
     onSuccess: () => {
+      void utils.resume.getAll.invalidate();
       setIsContainerVisible(false);
     },
   });
@@ -103,9 +104,9 @@ export function MutateResumeSection({ setIsContainerVisible, initialData }: Prop
   return (
     <form
       onSubmit={handleSaveResume}
-      className="ease absolute top-[0] left-[0] flex h-[100vh] w-[100vw] items-center justify-center bg-[rgba(0,0,0,0.7)] backdrop-blur-xs transition-all transition-discrete duration-[1s]"
+      className="ease absolute top-[0] left-[0] flex h-[100vh] w-[100vw] items-start justify-center bg-[rgba(0,0,0,0.7)] backdrop-blur-xs transition-all transition-discrete duration-[1s]"
     >
-      <Card className="h-[80%] w-[80%] self-center overflow-y-scroll border-[1px] border-gray-600 bg-linear-to-b from-gray-900 to-black shadow-2xl md:p-10">
+      <Card className="max-h-[90vh] w-[90%] mt-[5vh] overflow-y-scroll border-[1px] border-gray-600 bg-linear-to-b from-gray-900 to-black shadow-2xl md:p-10">
         <CardHeader className="text-xl font-[500] text-white">
           <div className="flex min-w-[100%] flex-row items-center justify-between">
             <Label className="text-2xl font-[500] text-white">
@@ -212,7 +213,7 @@ export function MutateResumeSection({ setIsContainerVisible, initialData }: Prop
         <CardFooter className="border-[0] bg-transparent">
           <Button
             type="submit"
-            className="mb-20 h-[50px] w-[100%] cursor-pointer bg-blue-500 text-white hover:bg-blue-800 hover:text-white"
+            className=" h-[50px] w-[100%] cursor-pointer bg-blue-500 text-white hover:bg-blue-800 hover:text-white"
           >
             {isEditMode ? "Update" : "Create"} Resume
           </Button>

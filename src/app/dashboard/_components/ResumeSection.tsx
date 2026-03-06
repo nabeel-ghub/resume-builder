@@ -29,6 +29,9 @@ export function ResumeSection() {
     setIsContainerVisible(true);
   }
 
+  const utils = api.useUtils();
+
+
   return (
     <div className="flex h-[85%] w-[80%] flex-col self-center mb-20">
       <>

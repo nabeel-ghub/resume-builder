@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 import { resumes } from "~/server/db/schema";
 import { eq, and } from "drizzle-orm";
 
@@ -103,17 +103,17 @@ export const resumeRouter = createTRPCRouter({
       if (!updatedResume) {
         throw new Error("Resume not found or unauthorized");
       }
-      
+
       return updatedResume;
     }),
 
-  getById: protectedProcedure
+  getById: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
       const [resume] = await ctx.db
         .select()
         .from(resumes)
-        .where(and(eq(resumes.id, input.id), eq(resumes.userId, ctx.user.id)));
+        .where(eq(resumes.id, input.id));
 
       if (!resume) {
         throw new Error("Resume not found or unauthorized");

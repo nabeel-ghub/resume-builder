@@ -2,7 +2,6 @@
 import { Button } from "~/components/ui/button";
 import { FaFilePdf, FaFileWord, FaArrowLeft } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { generateDocx } from "./generateDocx";
 
 
 interface MenuProps {
@@ -15,7 +14,7 @@ export function DownloadMenu({ resumeName, onPrint, onDocx }: MenuProps) {
   const router = useRouter();
 
   return (
-    <div className="sticky top-0 z-50 w-full border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md print:hidden">
+    <div className="sticky md:top-0 z-50 w-full border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md print:hidden">
       <div className="mx-auto flex max-w-5xl items-center justify-between p-4">
         <div className="flex items-center gap-4">
           <Button 

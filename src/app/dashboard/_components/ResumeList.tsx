@@ -20,7 +20,6 @@ export function ResumeList({ resumeData, onEdit }: ResumeListProps) {
     const deleteMutation = api.resume.delete.useMutation({
   onSuccess: () => {
     void utils.resume.getAll.invalidate();
-    alert("Resume permanently removed.");
   },
   onError: (err) => {
     alert(err.message);
@@ -28,7 +27,7 @@ export function ResumeList({ resumeData, onEdit }: ResumeListProps) {
 });
 
 const handleDelete = (id: number) => {
-  if (window.confirm("Are you sure? This action cannot be undone.")) {
+  if (window.confirm("Are you sure you want to delete this resume?")) {
     deleteMutation.mutate({ id });
   }
 };
