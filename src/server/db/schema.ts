@@ -1,4 +1,3 @@
-import { create } from "domain";
 import { relations } from "drizzle-orm";
 import { pgTableCreator, index, primaryKey } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
