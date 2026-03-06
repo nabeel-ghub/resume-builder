@@ -11,7 +11,7 @@ import { db } from "~/server/db";
 import { resumes as resumeTable } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 import { Resend } from "resend";
-import { env } from "process";
+import { env } from "~/env";
 
 // --- TYPE DEFINITIONS (Vulnerability Check: Prevents 'any' related crashes) ---
 interface ResumeEntry {

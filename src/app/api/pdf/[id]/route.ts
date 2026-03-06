@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import chromium from "@sparticuz/chromium";
 import puppeteer from "puppeteer-core";
 import { Resend } from "resend";
-import { env } from "process";
+import { env } from "~/env";
 
 export async function GET(
   request: Request,
@@ -11,10 +11,10 @@ export async function GET(
 ) {
   const { id: resumeId } = await params;
 
-  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+  const protocol = env.NODE_ENV === "development" ? "http" : "https";
   const host = request.headers.get("host");
   const printUrl = `${protocol}://${host}/resume/${resumeId}?print=true`;
-  const isDev = process.env.NODE_ENV === "development";
+  const isDev = env.NODE_ENV === "development";
   
   const resend = new Resend(env.RESEND_TOKEN);
 

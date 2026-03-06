@@ -9,6 +9,8 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+    VERCEL_URL: z.string().optional(),
+    PORT: z.coerce.number().default(3000),
   },
 
   client: {
@@ -21,6 +23,8 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     RESEND_TOKEN: process.env.RESEND_TOKEN,
     NODE_ENV: process.env.NODE_ENV,
+    VERCEL_URL: process.env.VERCEL_URL,
+    PORT: process.env.PORT,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   },
