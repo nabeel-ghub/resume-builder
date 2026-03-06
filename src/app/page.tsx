@@ -12,7 +12,7 @@ export default async function Home() {
   const typedUser: User | null = user ?? null;
 
   // 3. Extract metadata safely
-  const firstName = user?.user_metadata?.full_name?.split(" ")[0] ?? "User";
+  const firstName = (user?.user_metadata?.full_name as string | undefined)?.split(" ")[0] ?? "User";
 
   return (
     <HydrateClient>

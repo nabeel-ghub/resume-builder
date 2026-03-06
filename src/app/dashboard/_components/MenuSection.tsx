@@ -14,7 +14,7 @@ export function MenuSection({ user }: { user: User }) {
     router.push("/")
   };
 
-  const firstName = user?.user_metadata?.full_name?.split(" ")[0] ?? "User";
+  const firstName = (user?.user_metadata?.full_name as string | undefined)?.split(" ")[0] ?? "User";
 
   return (
     <div className="flex min-h-[20vh] w-[100%] items-center justify-between pr-[20px] pl-[20px]">
