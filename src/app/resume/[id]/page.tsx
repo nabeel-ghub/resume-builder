@@ -150,7 +150,7 @@ export default function ViewResumePage() {
 
 type ResumeSectionProps = { title: string; items: section[] };
 function ResumeSection({ title, items }: ResumeSectionProps) {
-  if (!items || items.length === 0) return <div className="mb-8"><h2 className="mb-4 border-b text-lg font-bold">{title}</h2><p className="text-sm text-muted-foreground">No items available.</p></div>;
+  if (!items || items.length === 0) return;
   return (
     <section className="mb-8">
       <h2 className="mb-4 border-b text-lg font-bold">{title}</h2>
@@ -164,6 +164,7 @@ function ResumeSection({ title, items }: ResumeSectionProps) {
           <ul className="mt-2 ml-5 list-disc space-y-1 text-xs">
             {item.bullet1 && <li>{item.bullet1}</li>}
             {item.bullet2 && <li>{item.bullet2}</li>}
+            {item.bullet3 && <li>{item.bullet3}</li>}
           </ul>
         </div>
       ))}
